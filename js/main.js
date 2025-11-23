@@ -1,6 +1,7 @@
 //^ home main elements
 const cardSec = document.querySelector(".details");
 const homeSec = document.querySelector(".rowData");
+const homeLogo = document.querySelector(".wrap")
 const loadingScreen = document.querySelector(".loading-screen");
 
 async function callApi() {
@@ -20,6 +21,12 @@ async function callApi() {
   }
 }
 callApi();
+
+homeLogo.addEventListener("click",function(){
+  hideAllSections()
+  homeSec.classList.remove("d-none")
+  
+})
 
 function getAllMeals(data) {// Display all meals as cards and add click event to open details
   let content = "";

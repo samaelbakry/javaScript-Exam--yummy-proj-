@@ -64,6 +64,9 @@ nav.navbar{
      transform: translateY(0); 
     }
 }
+.wrap{
+  cursor: pointer;
+}
 
 .nav-link:hover {
   color: var(--logo-icon);
