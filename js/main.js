@@ -98,12 +98,12 @@ export async function getMealDetails(id) { // Fetch full details of a meal by ID
         
           <h4>tags: ${meal.strTags}</h4>
           
-          <button class="btn btn-warning me-2 mt-2" onclick="window.open('${
+          <button class="btn btn-outline-warning me-2 mt-2 fw-bold" onclick="window.open('${
             meal.strSource
-          }', '_blank')">Source</button>
-          <button class="btn btn-danger me-2 mt-2" onclick="window.open('${
+          }', '_blank')"><i class="fa-solid fa-link m-1"></i>Source</button>
+          <button class="btn btn-outline-danger me-2 mt-2 fw-bold" onclick="window.open('${
             meal.strYoutube
-          }', '_blank')">Youtube</button>
+          }', '_blank')"><i class="fa-brands fa-youtube m-1"></i>Youtube</button>
          
         </div>
 
