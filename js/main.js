@@ -53,7 +53,7 @@ function getAllMeals(data) {// Display all meals as cards and add click event to
   });
 }
 
-async function getMealDetails(id) { // Fetch full details of a meal by ID and show details section
+export async function getMealDetails(id) { // Fetch full details of a meal by ID and show details section
   try {
     const details = await fetch(
       `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
@@ -125,109 +125,15 @@ function hideAllSections() {
   contactSec.classList.add("d-none");
 }
 //===========search api section=========//
-const searchBtn = document.querySelector(".search");
-const searchSec = document.querySelector(".searchSec");
-const nameInput = document.querySelector(".searchByN");
-const letterInput = document.querySelector(".searchByL");
-
 searchBtn.addEventListener("click", function () {
   hideAllSections();
   searchSec.classList.remove("d-none");
 });
-
 nameInput.addEventListener("input", searchName);
-
-function searchName() {
-  // Function: Get search input by name and call API
-  const mealN = nameInput.value.trim();
-  getName(mealN);
-}
-
-async function getName(value) {
-  // Function: Fetch meals by name and display search results
-  try {
-    const resp = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${value}`
-    );
-    const finalRes = await resp.json();
-    const meals = finalRes.meals;
-
-    if (meals) {
-      let content = "";
-      for (let meal of meals) {
-        content += `
-        <div class="col-12 col-md-4 col-lg-3">
-            <div class="card card-details position-relative rounded-3" data-id="${meal.idMeal}">
-                <img src="${meal.strMealThumb}" class="rounded-3" alt="meal-img">
-                <div class="layer position-absolute d-flex justify-content-center align-items-center bg-white bg-opacity-75 top-0 start-0 end-0 bottom-0">
-                    <h4 class="text-black fw-bold">${meal.strMeal}</h4>
-                </div>
-            </div>
-        </div>`;
-      }
-      searchSec.querySelector(".rowSearch").innerHTML = content;
-
-      searchSec.querySelectorAll(".card-details").forEach((card) => {
-        card.addEventListener("click", function () {
-          const cardId = card.dataset.id;
-          getMealDetails(cardId);
-          searchSec.classList.add("d-none");
-        });
-      });
-    } else {
-      searchSec.querySelector(".rowSearch").innerHTML =
-        "<p class='text-black fw-bold'>No meals found</p>";
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 letterInput.addEventListener("change", searchLetter);
 
-function searchLetter() {
-  // Function: Get search input by first letter and call API
-  const mealFirstL = letterInput.value.trim();
-  getLetter(mealFirstL);
-}
-async function getLetter(value) {
-  // Function: Fetch meals by first letter and display results
-  try {
-    const resp = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?f=${value}`
-    );
-    const finalRes = await resp.json();
-    const meals = finalRes.meals;
-    if (meals) {
-      let content = "";
-      for (let meal of meals) {
-        content += `
-        <div class="col-12 col-md-4 col-lg-3">
-            <div class="card card-details position-relative rounded-3" data-id="${meal.idMeal}">
-                <img src="${meal.strMealThumb}" class="rounded-3" alt="meal-img">
-                <div class="layer position-absolute d-flex justify-content-center align-items-center bg-white bg-opacity-75 top-0 start-0 end-0 bottom-0">
-                    <h4 class="text-black fw-bold">${meal.strMeal}</h4>
-                </div>
-            </div>
-        </div>`;
-      }
-      searchSec.querySelector(".rowSearch").innerHTML = content;
-
-      searchSec.querySelectorAll(".card-details").forEach((card) => {
-        card.addEventListener("click", function () {
-          const cardId = card.dataset.id;
-          getMealDetails(cardId);
-          searchSec.classList.add("d-none");
-        });
-      });
-    } else {
-      searchSec.querySelector(".rowSearch").innerHTML =
-        "<p class='text-black fw-bold'>No meals found</p>";
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
+import {searchBtn , searchSec , nameInput , letterInput , searchLetter , searchName } from "./search.js"
 
 //===========category api section=========//
 const categoresBtn = document.querySelector(".categores");
@@ -239,7 +145,6 @@ categoresBtn.addEventListener("click", function () {
   hideAllSections();
   categorySec.classList.remove("d-none");
 });
-
 async function getCategoryApi() {
   try {
     const resp = await fetch(
@@ -319,6 +224,7 @@ async function displayCatDetails(categoryName) {// Function: Fetch meals inside 
     console.log(error);
   }
 }
+
 //===========Area api section=========//
 const areaBtn = document.querySelector(".area");
 const areaSec = document.querySelector(".areaSec");
@@ -388,7 +294,6 @@ async function displayAreaMeals(area) { // Function: Fetch and show meals for a 
         </div>
       `;
     }
-
     rowAreaDetails.innerHTML = content;
     cardSec.classList.add("d-none");
     rowArea.classList.add("d-none");
@@ -416,7 +321,6 @@ ingredientsBtn.addEventListener("click", function () {
   hideAllSections();
   ingredientsSec.classList.remove("d-none");
 });
-
 async function getIngredients() {// Function: Fetch list of ingredients from API
   try {
     const resp = await fetch(
@@ -496,44 +400,11 @@ async function displayIngDetails(ingreName) {
   }
 }
 //===========validation section=========//
-const contactUsBtn = document.querySelector(".contactUs");
-const contactSec = document.querySelector(".contactSec");
-const submitBtn = document.querySelector(".submitBtn");
-
 contactUsBtn.addEventListener("click", function () {
   hideAllSections();
   contactSec.classList.remove("d-none");
 });
 
-const allInputs = document.querySelectorAll(".rowForm input");
-
-allInputs.forEach((input) => {
-  input.addEventListener("input", function () {
-    let pattern = new RegExp(input.dataset.regex);
-    if (pattern.test(input.value)) {
-      input.classList.add("is-valid");
-      input.classList.remove("is-invalid");
-      checkValidation();
-    } else {
-      input.classList.add("is-invalid");
-      input.classList.remove("is-valid");
-    }
-  });
-});
-
-function checkValidation() {
-  // Function: Check all inputs validity and enable submit button if valid
-  let allvalid = true;
-  allInputs.forEach((input) => {
-    let regex = new RegExp(input.dataset.regex);
-    if (!regex.test(input.value)) {
-      allvalid = false;
-    }
-  });
-  if (allvalid) {
-    submitBtn.classList.remove("disabled");
-  }
-}
 submitBtn.addEventListener("click", function () {
   // Function: Save contact form data to localStorage
   const userData = {
@@ -547,37 +418,11 @@ submitBtn.addEventListener("click", function () {
   alert("Data saved successfully!");
 });
 
+import {submitBtn , contactSec , contactUsBtn} from "./validation.js"
+
 //======DARK MODE THEME======//
-const darkIcon = document.querySelector(".darkIcon");
-const lightIcon = document.querySelector(".lightIcon");
 
-let storedTheme = JSON.parse(localStorage.getItem("mode")) || false;
-let darkTheme = storedTheme;
-
-if (darkTheme) {
-  document.body.classList.add("dark-theme");
-  darkIcon.classList.add("d-none");
-  lightIcon.classList.remove("d-none");
-} else {
-  document.body.classList.remove("dark-theme");
-  darkIcon.classList.remove("d-none");
-  lightIcon.classList.add("d-none");
-}
-
-function changeTheme() {
-  darkTheme = !darkTheme;
-  localStorage.setItem("mode", JSON.stringify(darkTheme));
-
-  if (darkTheme) {
-    document.body.classList.add("dark-theme");
-    darkIcon.classList.add("d-none");
-    lightIcon.classList.remove("d-none");
-  } else {
-    document.body.classList.remove("dark-theme");
-    darkIcon.classList.remove("d-none");
-    lightIcon.classList.add("d-none");
-  }
-}
+import {darkIcon , changeTheme , lightIcon} from "./theme.js"
 
 darkIcon.addEventListener("click", changeTheme);
 lightIcon.addEventListener("click", changeTheme);
