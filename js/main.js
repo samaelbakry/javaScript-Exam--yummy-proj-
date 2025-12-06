@@ -136,269 +136,38 @@ letterInput.addEventListener("change", searchLetter);
 import {searchBtn , searchSec , nameInput , letterInput , searchLetter , searchName } from "./search.js"
 
 //===========category api section=========//
-const categoresBtn = document.querySelector(".categores");
-const categorySec = document.querySelector(".categorySec");
-const cateDetails = document.querySelector(".rowCateDetails");
-const rowCate = document.querySelector(".rowCate");
 
-categoresBtn.addEventListener("click", function () {
-  hideAllSections();
-  categorySec.classList.remove("d-none");
-});
-async function getCategoryApi() {
-  try {
-    const resp = await fetch(
-      "https://www.themealdb.com/api/json/v1/1/categories.php"
-    );
-    const data = await resp.json();
-    displayCategory(data.categories);
-  } catch (error) {
-    console.log(error);
-  }
-}
-getCategoryApi(); // Function: Fetch all categories from API
+import { getCategoryApi , categoresBtn , categorySec } from "./category.js";
+export {cardSec , homeSec}
 
-function displayCategory(data) {// Function: Display category cards and add click event
-  let content = "";
-  for (let meal of data) {
-    content += ` 
-                <div class=" col-12 col-md-4 col-lg-3">
-           <div class="card card-details position-relative rounded-3" data-id="${
-             meal.strCategory
-           }" >
-            <img src=${meal.strCategoryThumb} class="rounded-3" alt="meal-img">
-            <div
-              class="layer position-absolute d-flex flex-column justify-content-center align-items-center bg-white bg-opacity-75 top-0 start-0 end-0 bottom-0">
-              <h4 class="text-black fw-bold">${meal.strCategory}</h4>
-              <p class="text-black">${meal.strCategoryDescription
-                .slice(0, 30)
-                .split(" ")
-                .join(" ")}</p>
-            </div>
-          </div>
-        </div>
-     `;
-  }
+categoresBtn.addEventListener("click" , function(){
+  hideAllSections()
+  categorySec.classList.remove("d-none")
+})
 
-  rowCate.innerHTML = content;
-  document.querySelectorAll(".card-details").forEach((card) => {
-    card.addEventListener("click", function () {
-      const cardId = card.dataset.id;
-      rowCate.classList.add("d-none");
-      cardSec.classList.add("d-none")
-      displayCatDetails(cardId);
-    });
-  });
-}
-
-async function displayCatDetails(categoryName) {// Function: Fetch meals inside a specific category and display them
-  try {
-    const resp = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`
-    );
-    const data = await resp.json();
-    const meals = data.meals;
-    let content = "";
-
-    for (let meal of meals) {
-      content += `
-        <div class="col-12 col-md-4 col-lg-3">
-          <div class="card card-M rounded-3" data-id="${meal.idMeal}">
-            <img src="${meal.strMealThumb}" class="rounded-3" alt="meal-category">
-            <h5 class="text-center mt-2">${meal.strMeal}</h5>
-          </div>
-        </div>
-      `;
-    }
-    cateDetails.innerHTML = content;
-        cateDetails.querySelectorAll(".card-M").forEach((card) => {
-        card.addEventListener("click", function () {
-        const cardId = card.dataset.id;
-        getMealDetails(cardId);
-        cardSec.classList.remove("d-none");
-        cateDetails.classList.add("d-none");
-        rowCate.classList.add("d-none");
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
+getCategoryApi()
 
 //===========Area api section=========//
-const areaBtn = document.querySelector(".area");
-const areaSec = document.querySelector(".areaSec");
-const rowArea = document.querySelector(".rowArea");
-const rowAreaDetails = document.querySelector(".rowAreaDetails");
+import {areaBtn , areaSec , getAreaApi } from "./area.js"
 
 areaBtn.addEventListener("click", function () {
   hideAllSections();
   areaSec.classList.remove("d-none");
 });
 
-async function getAreaApi() {  // Function: Fetch list of areas/countries from API
-  try {
-    const resp = await fetch(
-      "https://www.themealdb.com/api/json/v1/1/list.php?a=list"
-    );
-    const data = await resp.json();
-    const meals = data.meals;
-    displayArea(meals);
-    loadingScreen.classList.add("d-none");
-  } catch (error) {
-    console.log(error);
-  }
-}
-getAreaApi();
+getAreaApi()
 
-function displayArea(data) { // Function: Display all areas as cards and add click event
-  let content = "";
-  for (let meal of data) {
-    content += ` 
-                <div class=" col-12 col-md-4 col-lg-3">
-              <div class="card card-details position-relative rounded-3 d-flex flex-column align-items-center text-center" data-id="${meal.strArea}">
-                <img src="./img/food-cover.png"  width="40px" alt="meal-area-pic">
-               <h4 class="text-black fw-bold">${meal.strArea}</h4>
-          </div>
-        </div>
-     `;
-  }
-  rowArea.innerHTML = content;
-  document.querySelectorAll(".card-details").forEach((card) => {
-    card.addEventListener("click", function () {
-      const cardId = card.dataset.id;
-      homeSec.classList.add("d-none");
-      cardSec.classList.add("d-none");
-      displayAreaMeals(cardId);
-    });
-  });
-}
-
-async function displayAreaMeals(area) { // Function: Fetch and show meals for a selected area
-  try {
-    const resp = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
-    );
-    const data = await resp.json();
-    const meals = data.meals;
-
-    let content = "";
-
-    for (let meal of meals) {
-      content += `
-        <div class="col-12 col-md-4 col-lg-3">
-          <div class="card card-M rounded-3" data-id="${meal.idMeal}">
-            <img src="${meal.strMealThumb}" class="rounded-3" alt="meal-area">
-            <h5 class="text-center mt-2">${meal.strMeal}</h5>
-          </div>
-        </div>
-      `;
-    }
-    rowAreaDetails.innerHTML = content;
-    cardSec.classList.add("d-none");
-    rowArea.classList.add("d-none");
-
-    rowAreaDetails.querySelectorAll(".card-M").forEach((card) => {
-      card.addEventListener("click", function () {
-        const cardId = card.dataset.id;
-        getMealDetails(cardId);
-        cardSec.classList.remove("d-none");
-        rowArea.classList.add("d-none");
-        rowAreaDetails.classList.add("d-none");
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
 //===========ingredients api section=========//
-const ingredientsBtn = document.querySelector(".ingredients");
-const ingredientsSec = document.querySelector(".ingredientsSec");
-const rowIngreSec = document.querySelector(".rowIngreSec");
-const rowIngDetails = document.querySelector(".rowIngDetails");
+
+import{ingredientsBtn , ingredientsSec , getIngredients } from "./ingredients.js"
 
 ingredientsBtn.addEventListener("click", function () {
   hideAllSections();
   ingredientsSec.classList.remove("d-none");
 });
-async function getIngredients() {// Function: Fetch list of ingredients from API
-  try {
-    const resp = await fetch(
-      "https://www.themealdb.com/api/json/v1/1/list.php?i=list"
-    );
-    const data = await resp.json();
-    const meals = data.meals;
-    displayIngredients(meals);
-  } catch (error) {
-    console.log(error);
-  }
-}
-getIngredients();
 
-function displayIngredients(data) {// Function: Fetch and show meals that use a specific ingredient
-  let content = "";
-  for (let meal of data) {
-    const imgUrl = `https://www.themealdb.com/images/ingredients/${meal.strIngredient}.png`;
-    content += ` 
-        <div class="col-12 col-md-4 col-lg-3">
-          <div class="card card-details rounded-3" data-id ="${
-            meal.strIngredient
-          }">
-            <img src="${imgUrl}" class="rounded-3" alt="ingredients-img">
-            <h5 class="text-center mt-2">${meal.strIngredient}</h5>
-            <p>${
-              meal.strDescription
-                ? meal.strDescription.slice(0, 60)
-                : "No description"
-            } </p>
-          </div>
-        </div>
-      `;
-  }
-  rowIngreSec.innerHTML = content;
-  document.querySelectorAll(".card-details").forEach((card) => {
-    card.addEventListener("click", function () {
-      const cardId = card.dataset.id;
-      homeSec.classList.add("d-none");
-      cardSec.classList.add("d-none");
-      displayIngDetails(cardId);
-    });
-  });
-}
-async function displayIngDetails(ingreName) {
-  try {
-    const resp = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingreName}`
-    );
-    const data = await resp.json();
-    const meals = data.meals;
+getIngredients()
 
-    let content = "";
-    for (let meal of meals) {
-      content += `
-        <div class="col-12 col-md-4 col-lg-3">
-          <div class="card  card-M rounded-3" data-id ="${meal.idMeal}">
-            <img src="${meal.strMealThumb}" class="rounded-3" alt="ing-img">
-            <h5 class="text-center mt-2">${meal.strMeal}</h5>
-          </div>
-        </div>
-      `;
-    }
-    rowIngDetails.innerHTML = content;
-    rowIngreSec.classList.add("d-none");
-    rowIngDetails.querySelectorAll(".card-M").forEach((card) => {
-      card.addEventListener("click", function () {
-        const cardId = card.dataset.id;
-        getMealDetails(cardId);
-        cardSec.classList.remove("d-none");
-        rowIngDetails.classList.add("d-none");
-        rowIngreSec.classList.add("d-none");
-      });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
 //===========validation section=========//
 contactUsBtn.addEventListener("click", function () {
   hideAllSections();

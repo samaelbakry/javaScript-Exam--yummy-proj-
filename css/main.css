@@ -5,7 +5,9 @@
   --bg: #dedede;
   --icon: #dedede;
   --logo-icon: #ad0e0e;
-  --theme-icon:#121212
+  --theme-icon:#121212;
+  --cardText: #ad0e0e;
+  --cardColor:#fff;
 }
 .dark-theme {
   --accent:#dedede;
@@ -13,6 +15,8 @@
   --icon:#616161;
   --bg: #101010;
   --theme-icon:#fff;
+  --cardColor:#414141;
+  --cardText:#fff;
   background:linear-gradient(rgb(31, 31, 31),var(--track-bg));
   background-position: center;
   background-repeat: no-repeat;
@@ -89,6 +93,8 @@ nav h6{
   overflow: hidden;
   border: unset;
   transition: all 0.5s;
+  background-color: var(--cardColor);
+  color: var(--cardText);
 }
 .card:hover {
   transform: scale(1.05);
